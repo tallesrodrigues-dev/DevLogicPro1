@@ -4,6 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plataforma de Cursos</title>
+    <style>
+      /* estilo simples para mensagem de erro visível */
+      #app-error { padding:24px; text-align:center; color:#000; background:#ffdede; font-family:Arial, sans-serif; }
+    </style>
+    <script>
+      // Diagnóstico: se nada for renderizado em 2s, mostra mensagem amigável e loga no console.
+      (function () {
+        window.__appStarted = false;
+        // The React app will render inside #root; monitor it.
+        setTimeout(function () {
+          try {
+            var root = document.getElementById('root');
+            var empty = !root || !root.innerHTML || !root.innerHTML.trim();
+            if (empty && !window.__appStarted) {
+              document.body.innerHTML = '<div id="app-error"><h2>Aplicação não carregou</h2><p>Verifique o console do navegador e os logs do deploy (Vercel). Se estiver usando Vite, confirme que o build foi executado.</p></div>';
+              console.error('App parece não ter sido inicializado: root está vazio. Verifique se o bundle foi gerado e se o build foi executado no Vercel.');
+            }
+          } catch (e) {
+            console.error('Erro ao verificar status de inicialização do app:', e);
+          }
+        }, 2000);
+        // Captura erros globais para exibição no console
+        window.addEventListener('error', function (ev) {
+          console.error('Erro global detectado:', ev.error || ev.message || ev);
+        });
+        window.addEventListener('unhandledrejection', function (ev) {
+          console.error('Promise rejeitada não tratada:', ev.reason);
+        });
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
